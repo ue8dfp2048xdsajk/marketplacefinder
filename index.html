@@ -2,71 +2,316 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Marketplace Finder</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find Marketplaces With Organic Traffic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
+*{
+box-sizing: border-box;
+}
+
 body{
-font-family: Inter, Arial, sans-serif;
-background:#1a1a1a;
-margin:0;
-padding:30px;
+font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+background: #1a1a1a;
+margin: 0;
+padding: 40px 20px;
+min-height: 100vh;
 }
 
 .container{
-max-width:1200px;
-margin:auto;
-background:white;
-padding:30px;
-border-radius:14px;
+max-width: 1300px;
+margin: 0 auto;
+background: white;
+border-radius: 16px;
+box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+overflow: hidden;
 }
 
-h1{
-margin-bottom:20px;
+.header{
+background: linear-gradient(135deg, #00bfa5 0%, #00897b 100%);
+color: white;
+padding: 40px 40px 30px;
+position: relative;
+overflow: hidden;
+}
+
+.header::before{
+content: '';
+position: absolute;
+top: -50%;
+right: -10%;
+width: 400px;
+height: 400px;
+background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+border-radius: 50%;
+}
+
+.header h1{
+margin: 0 0 10px 0;
+font-size: 32px;
+font-weight: 700;
+letter-spacing: -0.5px;
+position: relative;
+z-index: 1;
+}
+
+.header .subtitle{
+font-size: 18px;
+opacity: 0.95;
+font-weight: 500;
+position: relative;
+z-index: 1;
+}
+
+.header .credit{
+font-size: 14px;
+opacity: 0.85;
+font-weight: 500;
+margin-top: 10px;
+position: relative;
+z-index: 1;
+}
+
+.content{
+padding: 40px;
+}
+
+.controls-panel{
+background: linear-gradient(135deg, #e0f2f1 0%, #f1f8f7 100%);
+border-left: 4px solid #00bfa5;
+padding: 24px;
+margin-bottom: 24px;
+border-radius: 8px;
+box-shadow: 0 2px 8px rgba(0,191,165,0.1);
 }
 
 .controls{
-display:flex;
-gap:12px;
-flex-wrap:wrap;
-margin-bottom:20px;
+display: flex;
+gap: 16px;
+flex-wrap: wrap;
+align-items: center;
 }
 
-input, select{
-padding:12px;
-border-radius:8px;
-border:1px solid #ddd;
-font-size:14px;
+input[type="text"]{
+padding: 12px 16px;
+border: 2px solid #e0e0e0;
+border-radius: 8px;
+font-size: 14px;
+font-family: inherit;
+transition: all 0.2s;
+background: white;
+min-width: 240px;
+flex: 1;
+}
+
+input[type="text"]:focus{
+outline: none;
+border-color: #00bfa5;
+box-shadow: 0 0 0 3px rgba(0,191,165,0.1);
+}
+
+input[type="text"]::placeholder{
+color: #9e9e9e;
+}
+
+.filters{
+display: flex;
+gap: 16px;
+flex-wrap: wrap;
+align-items: center;
+}
+
+.filters label{
+display: flex;
+align-items: center;
+gap: 8px;
+font-size: 13px;
+font-weight: 600;
+color: #424242;
+cursor: pointer;
+user-select: none;
+text-transform: uppercase;
+letter-spacing: 0.3px;
+}
+
+.filters input[type="checkbox"]{
+width: 16px;
+height: 16px;
+accent-color: #00bfa5;
+cursor: pointer;
+}
+
+#showAllBtn{
+padding: 12px 20px;
+cursor: pointer;
+background: linear-gradient(135deg, #00bfa5 0%, #00897b 100%);
+color: white;
+border: none;
+border-radius: 8px;
+font-size: 13px;
+font-weight: 600;
+font-family: inherit;
+transition: all 0.2s;
+box-shadow: 0 2px 8px rgba(0,191,165,0.3);
+text-transform: uppercase;
+letter-spacing: 0.5px;
+}
+
+#showAllBtn:hover{
+background: linear-gradient(135deg, #00897b 0%, #00695c 100%);
+box-shadow: 0 4px 12px rgba(0,191,165,0.4);
+transform: translateY(-2px);
+}
+
+#showAllBtn:active{
+transform: translateY(0);
+box-shadow: 0 2px 8px rgba(0,191,165,0.3);
+}
+
+.updated{
+font-size: 13px;
+color: #616161;
+font-weight: 500;
+margin-bottom: 20px;
+}
+
+.table-wrapper{
+background: white;
+border-radius: 12px;
+overflow: auto;
+box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+border: 1px solid #e0e0e0;
 }
 
 table{
-width:100%;
-border-collapse:collapse;
+border-collapse: collapse;
+width: 100%;
+background: white;
+table-layout: fixed;
 }
 
 th, td{
-padding:14px;
-border-bottom:1px solid #eee;
-text-align:left;
+padding: 16px 20px;
+text-align: left;
+border-bottom: 1px solid #f0f0f0;
+vertical-align: top;
+word-break: break-word;
+overflow-wrap: anywhere;
 }
+
+th:nth-child(1), td:nth-child(1){ width: 16%; }
+th:nth-child(2), td:nth-child(2){ width: 14%; }
+th:nth-child(3), td:nth-child(3){ width: 20%; }
+th:nth-child(4), td:nth-child(4){ width: 25%; }
+th:nth-child(5), td:nth-child(5){ width: 25%; }
 
 th{
-background:#f5f5f5;
-cursor:pointer;
+background: linear-gradient(180deg, #fafafa 0%, #f5f5f5 100%);
+font-weight: 700;
+font-size: 13px;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+color: #424242;
+border-bottom: 2px solid #e0e0e0;
+transition: background 0.2s;
 }
 
-tr:hover{
-background:#fafafa;
+th.sortable{
+cursor: pointer;
+}
+
+th.sortable:hover{
+background: linear-gradient(180deg, #f5f5f5 0%, #eeeeee 100%);
+}
+
+th.sorted{
+background: linear-gradient(180deg, #e0f2f1 0%, #b2dfdb 100%);
+color: #00897b;
+}
+
+.sort-icon{
+font-size: 12px;
+margin-left: 6px;
+opacity: 0.6;
+}
+
+th.sorted .sort-icon{
+opacity: 1;
+}
+
+tbody tr{
+transition: background 0.15s;
+}
+
+tbody tr:hover{
+background: #f8f9fa;
+}
+
+tbody tr:last-child td{
+border-bottom: none;
+}
+
+td{
+font-size: 14px;
+color: #212121;
+}
+
+td:first-child{
+font-weight: 500;
+}
+
+td:nth-child(2){
+font-variant-numeric: tabular-nums;
+color: #616161;
 }
 
 a{
-color:#0066cc;
-text-decoration:none;
+color: #00897b;
+text-decoration: none;
+font-weight: 500;
 }
 
 a:hover{
-text-decoration:underline;
+text-decoration: underline;
+color: #00695c;
 }
 
+@media (max-width: 768px){
+body{
+padding: 20px 10px;
+}
+
+.container{
+border-radius: 12px;
+}
+
+.header{
+padding: 28px 24px 22px;
+}
+
+.header h1{
+font-size: 26px;
+}
+
+.header .subtitle{
+font-size: 16px;
+}
+
+.content{
+padding: 24px;
+}
+
+.controls-panel{
+padding: 16px;
+}
+
+th, td{
+padding: 12px 14px;
+}
+}
 </style>
 </head>
 
@@ -74,48 +319,61 @@ text-decoration:underline;
 
 <div class="container">
 
-<h1>Marketplace Finder</h1>
+<div class="header">
+<h1>Find Marketplaces With Organic Traffic</h1>
+<div class="subtitle">Browse &amp; filter 100+ organic ecommerce traffic sources</div>
+<div class="credit">by Tia TX ©</div>
+</div>
 
+<div class="content">
+
+<div class="controls-panel">
 <div class="controls">
 
 <input type="text" id="searchInput" placeholder="Search products or platforms...">
 
-<select id="categoryFilter">
-<option value="">All Categories</option>
-<option value="physical">Physical</option>
-<option value="print on demand">Print on Demand</option>
-<option value="digital">Digital</option>
-</select>
-
+<div class="filters">
+<label><input type="checkbox" id="filterPhysical" checked> Physical</label>
+<label><input type="checkbox" id="filterDigital" checked> Digital</label>
+<label><input type="checkbox" id="filterPod" checked> Print on Demand</label>
+<label><input type="checkbox" id="filterManaged" checked> Managed Fulfilment</label>
+<label><input type="checkbox" id="filterArtisan" checked> Artisan/Handmade</label>
+<button type="button" id="showAllBtn">Show all</button>
 </div>
 
+</div>
+</div>
+
+<div class="updated">Last updated: July 2026</div>
+
+<div class="table-wrapper">
 <table>
 <thead>
 <tr>
-<th>Name</th>
-<th onclick="sortTraffic()">Monthly Visitors ⬍</th>
-<th>Main Product Type(s)</th>
-<th>Marketplace Domain</th>
-<th>How to Sell</th>
+<th id="nameHeader" class="sortable sorted" onclick="sortBy('name')">Name <span class="sort-icon">↑</span></th>
+<th id="trafficHeader" class="sortable" onclick="sortBy('traffic')">Monthly Visitors (Similarweb) <span class="sort-icon">⇅</span></th>
+<th>Main product type(s)</th>
+<th>Marketplace domain</th>
+<th>How to sell</th>
 </tr>
 </thead>
 
 <tbody id="tableBody"></tbody>
 </table>
+</div>
 
+</div>
 </div>
 
 <script>
 
-const CSV_FILES = [
-"https://raw.githubusercontent.com/ue8dfp2048xdsajk/mkpldr/main/digitalproductmarketplaces.csv"
-];
+const CSV_FILE = "digitalproductmarketplaces.csv";
 
 let data = [];
 let filtered = [];
-let sortAsc = true;
+let sortCol = 'name';
+let sortAsc = true; // default: name A-Z
 
-// CSV parser (handles quotes)
 function parseCSV(text){
 const rows = [];
 let row = [];
@@ -132,9 +390,10 @@ else if(char === ',' && !insideQuotes){
 row.push(current);
 current = '';
 }
-else if(char === '\n' && !insideQuotes){
+else if((char === '\n' || char === '\r') && !insideQuotes){
+if(char === '\r' && text[i+1] === '\n') i++;
 row.push(current);
-rows.push(row);
+if(row.length > 1 || row[0] !== '') rows.push(row);
 row = [];
 current = '';
 }
@@ -143,109 +402,182 @@ current += char;
 }
 }
 
+if(current.length || row.length){
 row.push(current);
-rows.push(row);
+if(row.length > 1 || row[0] !== '') rows.push(row);
+}
 
 return rows;
 }
 
-// Load data
-async function loadData(){
+function parseTraffic(value){
+const cleaned = String(value || '').trim().toLowerCase();
+if(!cleaned || cleaned === 'unknown'){
+return { traffic: 0, trafficUnknown: true };
+}
+const digits = cleaned.replace(/[^0-9]/g,'');
+return {
+traffic: digits ? parseInt(digits, 10) : 0,
+trafficUnknown: !digits
+};
+}
 
-let all = [];
+function isYes(value){
+return String(value || '').trim().toLowerCase() === 'y';
+}
 
-for(const file of CSV_FILES){
-const res = await fetch(file);
-const text = await res.text();
+function escapeHtml(text){
+return String(text)
+.replace(/&/g,'&amp;')
+.replace(/</g,'&lt;')
+.replace(/>/g,'&gt;')
+.replace(/"/g,'&quot;');
+}
 
-const rows = parseCSV(text);
-rows.shift(); // remove headers
+function toHref(url){
+const cleaned = String(url || '').trim().replace(/[.,;:!?)]+$/,'');
+if(!cleaned) return '#';
+if(/^https?:\/\//i.test(cleaned)) return cleaned;
+return 'https://' + cleaned;
+}
 
-rows.forEach(r => {
+function linkifyText(text){
+const escaped = escapeHtml(text);
+const urlPattern = /(https?:\/\/[^\s|<]+|www\.[^\s|<]+|(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}(?:\/[^\s|<]*)?)/gi;
 
-if(r.length < 5) return;
-
-all.push({
-name: r[0],
-traffic: parseInt(r[1].replace(/[^0-9]/g,'')) || 0,
-products: r[2].toLowerCase(),
-domain: r[3],
-how: r[4],
-category: r[2].toLowerCase()
-});
-
+return escaped.replace(urlPattern, (match) => {
+const href = toHref(match);
+return `<a href="${href}" target="_blank" rel="noopener noreferrer">${match}</a>`;
 });
 }
 
-data = all;
-filtered = [...data];
+function updateSortHeader(){
+const nameHeader = document.getElementById("nameHeader");
+const trafficHeader = document.getElementById("trafficHeader");
+const nameIcon = nameHeader.querySelector(".sort-icon");
+const trafficIcon = trafficHeader.querySelector(".sort-icon");
 
+nameHeader.classList.toggle("sorted", sortCol === 'name');
+trafficHeader.classList.toggle("sorted", sortCol === 'traffic');
+
+nameIcon.textContent = sortCol === 'name' ? (sortAsc ? '↑' : '↓') : '⇅';
+trafficIcon.textContent = sortCol === 'traffic' ? (sortAsc ? '↑' : '↓') : '⇅';
+}
+
+function sortRows(){
+filtered.sort((a, b) => {
+if(sortCol === 'name'){
+const cmp = a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
+return sortAsc ? cmp : -cmp;
+}
+return sortAsc ? a.traffic - b.traffic : b.traffic - a.traffic;
+});
+}
+
+function sortBy(col){
+if(sortCol === col){
+sortAsc = !sortAsc;
+}else{
+sortCol = col;
+// Name defaults to A-Z; traffic defaults to highest first
+sortAsc = col === 'name';
+}
+sortRows();
+updateSortHeader();
 render();
 }
 
-// Render table
-function render(){
+async function loadData(){
+const res = await fetch(CSV_FILE);
+const text = await res.text();
+const rows = parseCSV(text);
+rows.shift(); // headers
 
+data = rows
+.filter(r => r.length >= 10 && r[0].trim())
+.map(r => {
+const { traffic, trafficUnknown } = parseTraffic(r[1]);
+return {
+name: r[0].trim(),
+traffic,
+trafficUnknown,
+products: r[2].trim(),
+domain: r[3].trim(),
+how: r[4].trim(),
+physical: isYes(r[5]),
+digital: isYes(r[6]),
+printOnDemand: isYes(r[7]),
+managedFulfilment: isYes(r[8]),
+artisanHandmade: isYes(r[9])
+};
+});
+
+applyFilters();
+}
+
+function render(){
 const tbody = document.getElementById("tableBody");
 tbody.innerHTML = "";
 
 filtered.forEach(row => {
-
 const tr = document.createElement("tr");
-
+const trafficLabel = row.trafficUnknown ? 'unknown' : row.traffic.toLocaleString();
 tr.innerHTML = `
-<td>${row.name}</td>
-<td>${row.traffic.toLocaleString()}</td>
-<td>${row.products}</td>
-<td><a href="${row.domain}" target="_blank">${row.domain}</a></td>
-<td>${row.how}</td>
+<td>${escapeHtml(row.name)}</td>
+<td>${trafficLabel}</td>
+<td>${escapeHtml(row.products)}</td>
+<td>${linkifyText(row.domain)}</td>
+<td>${linkifyText(row.how)}</td>
 `;
-
 tbody.appendChild(tr);
-
 });
 }
 
-// Filters
 function applyFilters(){
-
 const search = document.getElementById("searchInput").value.toLowerCase();
-const category = document.getElementById("categoryFilter").value;
+const physical = document.getElementById("filterPhysical").checked;
+const digital = document.getElementById("filterDigital").checked;
+const pod = document.getElementById("filterPod").checked;
+const managed = document.getElementById("filterManaged").checked;
+const artisan = document.getElementById("filterArtisan").checked;
 
 filtered = data.filter(row => {
+const matchesType =
+(physical && row.physical) ||
+(digital && row.digital) ||
+(pod && row.printOnDemand) ||
+(managed && row.managedFulfilment) ||
+(artisan && row.artisanHandmade);
 
 const matchesSearch =
+!search ||
 row.name.toLowerCase().includes(search) ||
-row.products.includes(search) ||
+row.products.toLowerCase().includes(search) ||
 row.how.toLowerCase().includes(search);
 
-const matchesCategory =
-!category || row.category.includes(category);
-
-return matchesSearch && matchesCategory;
-
+return matchesType && matchesSearch;
 });
 
+sortRows();
+updateSortHeader();
 render();
 }
 
-// Sort by traffic
-function sortTraffic(){
-
-sortAsc = !sortAsc;
-
-filtered.sort((a,b)=>{
-return sortAsc ? a.traffic - b.traffic : b.traffic - a.traffic;
-});
-
-render();
+function showAll(){
+document.getElementById("filterPhysical").checked = true;
+document.getElementById("filterDigital").checked = true;
+document.getElementById("filterPod").checked = true;
+document.getElementById("filterManaged").checked = true;
+document.getElementById("filterArtisan").checked = true;
+applyFilters();
 }
 
-// Events
 document.getElementById("searchInput").addEventListener("input", applyFilters);
-document.getElementById("categoryFilter").addEventListener("change", applyFilters);
+["filterPhysical","filterDigital","filterPod","filterManaged","filterArtisan"].forEach(id => {
+document.getElementById(id).addEventListener("change", applyFilters);
+});
+document.getElementById("showAllBtn").addEventListener("click", showAll);
 
-// Init
 loadData();
 
 </script>

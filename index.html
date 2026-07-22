@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Marketplace Finder</title>
+
+<style>
+body{
+font-family: Inter, Arial, sans-serif;
+background:#1a1a1a;
+margin:0;
+padding:30px;
+}
+
+.container{
+max-width:1200px;
+margin:auto;
+background:white;
+padding:30px;
+border-radius:14px;
+}
+
+h1{
+margin-bottom:20px;
+}
+
+.controls{
+display:flex;
+gap:12px;
+flex-wrap:wrap;
+margin-bottom:20px;
+}
+
+input, select{
+padding:12px;
+border-radius:8px;
+border:1px solid #ddd;
+font-size:14px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th, td{
+padding:14px;
+border-bottom:1px solid #eee;
+text-align:left;
+}
+
+th{
+background:#f5f5f5;
+cursor:pointer;
+}
+
+tr:hover{
+background:#fafafa;
+}
+
+a{
+color:#0066cc;
+text-decoration:none;
+}
+
+a:hover{
+text-decoration:underline;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Marketplace Finder</h1>
+
+<div class="controls">
+
+<input type="text" id="searchInput" placeholder="Search products or platforms...">
+
+<select id="categoryFilter">
+<option value="">All Categories</option>
+<option value="physical">Physical</option>
+<option value="print on demand">Print on Demand</option>
+<option value="digital">Digital</option>
+</select>
+
+</div>
+
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th onclick="sortTraffic()">Monthly Visitors ⬍</th>
+<th>Main Product Type(s)</th>
+<th>Marketplace Domain</th>
+<th>How to Sell</th>
+</tr>
+</thead>
+
+<tbody id="tableBody"></tbody>
+</table>
+
+</div>
+
+<script>
+
+const CSV_FILES = [
+"https://raw.githubusercontent.com/ue8dfp2048xdsajk/mkpldr/main/digitalproductmarketplaces.csv"
+];
+
+let data = [];
+let filtered = [];
+let sortAsc = true;
+
+// CSV parser (handles quotes)
+function parseCSV(text){
+const rows = [];
+let row = [];
+let current = '';
+let insideQuotes = false;
+
+for(let i=0;i<text.length;i++){
+const char = text[i];
+
+if(char === '"'){
+insideQuotes = !insideQuotes;
+}
+else if(char === ',' && !insideQuotes){
+row.push(current);
+current = '';
+}
+else if(char === '\n' && !insideQuotes){
+row.push(current);
+rows.push(row);
+row = [];
+current = '';
+}
+else{
+current += char;
+}
+}
+
+row.push(current);
+rows.push(row);
+
+return rows;
+}
+
+// Load data
+async function loadData(){
+
+let all = [];
+
+for(const file of CSV_FILES){
+const res = await fetch(file);
+const text = await res.text();
+
+const rows = parseCSV(text);
+rows.shift(); // remove headers
+
+rows.forEach(r => {
+
+if(r.length < 5) return;
+
+all.push({
+name: r[0],
+traffic: parseInt(r[1].replace(/[^0-9]/g,'')) || 0,
+products: r[2].toLowerCase(),
+domain: r[3],
+how: r[4],
+category: r[2].toLowerCase()
+});
+
+});
+}
+
+data = all;
+filtered = [...data];
+
+render();
+}
+
+// Render table
+function render(){
+
+const tbody = document.getElementById("tableBody");
+tbody.innerHTML = "";
+
+filtered.forEach(row => {
+
+const tr = document.createElement("tr");
+
+tr.innerHTML = `
+<td>${row.name}</td>
+<td>${row.traffic.toLocaleString()}</td>
+<td>${row.products}</td>
+<td><a href="${row.domain}" target="_blank">${row.domain}</a></td>
+<td>${row.how}</td>
+`;
+
+tbody.appendChild(tr);
+
+});
+}
+
+// Filters
+function applyFilters(){
+
+const search = document.getElementById("searchInput").value.toLowerCase();
+const category = document.getElementById("categoryFilter").value;
+
+filtered = data.filter(row => {
+
+const matchesSearch =
+row.name.toLowerCase().includes(search) ||
+row.products.includes(search) ||
+row.how.toLowerCase().includes(search);
+
+const matchesCategory =
+!category || row.category.includes(category);
+
+return matchesSearch && matchesCategory;
+
+});
+
+render();
+}
+
+// Sort by traffic
+function sortTraffic(){
+
+sortAsc = !sortAsc;
+
+filtered.sort((a,b)=>{
+return sortAsc ? a.traffic - b.traffic : b.traffic - a.traffic;
+});
+
+render();
+}
+
+// Events
+document.getElementById("searchInput").addEventListener("input", applyFilters);
+document.getElementById("categoryFilter").addEventListener("change", applyFilters);
+
+// Init
+loadData();
+
+</script>
+
+</body>
+</html>

@@ -19,6 +19,10 @@ background: #1a1a1a;
 margin: 0;
 padding: 40px 20px;
 min-height: 100vh;
+user-select: none;
+-webkit-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
 }
 
 .container{
@@ -105,6 +109,10 @@ transition: all 0.2s;
 background: white;
 min-width: 240px;
 flex: 1;
+user-select: auto;
+-webkit-user-select: auto;
+-moz-user-select: auto;
+-ms-user-select: auto;
 }
 
 input[type="text"]:focus{
@@ -158,6 +166,10 @@ transition: all 0.2s;
 box-shadow: 0 2px 8px rgba(0,191,165,0.3);
 text-transform: uppercase;
 letter-spacing: 0.5px;
+user-select: auto;
+-webkit-user-select: auto;
+-moz-user-select: auto;
+-ms-user-select: auto;
 }
 
 #showAllBtn:hover{
@@ -577,6 +589,56 @@ document.getElementById("searchInput").addEventListener("input", applyFilters);
 document.getElementById(id).addEventListener("change", applyFilters);
 });
 document.getElementById("showAllBtn").addEventListener("click", showAll);
+
+function isSearchTarget(el){
+return el && (el.id === 'searchInput' || el.closest?.('#searchInput'));
+}
+
+document.addEventListener('contextmenu', e => e.preventDefault());
+
+document.addEventListener('copy', e => {
+if(isSearchTarget(e.target)) return;
+e.preventDefault();
+});
+
+document.addEventListener('cut', e => {
+if(isSearchTarget(e.target)) return;
+e.preventDefault();
+});
+
+document.addEventListener('dragstart', e => e.preventDefault());
+
+document.addEventListener('keydown', e => {
+const key = e.key.toLowerCase();
+const mod = e.ctrlKey || e.metaKey;
+const inSearch = isSearchTarget(e.target);
+
+if(key === 'f12'){
+e.preventDefault();
+return;
+}
+
+if(mod && e.shiftKey && ['i','j','c'].includes(key)){
+e.preventDefault();
+return;
+}
+
+if(mod && e.altKey && key === 'i'){
+e.preventDefault();
+return;
+}
+
+if(mod && key === 'u'){
+e.preventDefault();
+return;
+}
+
+if(inSearch) return;
+
+if(mod && ['c','x','a','s'].includes(key)){
+e.preventDefault();
+}
+});
 
 loadData();
 

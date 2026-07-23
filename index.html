@@ -31,7 +31,7 @@ margin: 0 auto;
 background: white;
 border-radius: 16px;
 box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-overflow: hidden;
+overflow: visible;
 }
 
 .header{
@@ -194,12 +194,14 @@ margin-bottom: 20px;
 background: white;
 border-radius: 12px;
 overflow: auto;
+max-height: calc(100vh - 220px);
 box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 border: 1px solid #e0e0e0;
 }
 
 table{
-border-collapse: collapse;
+border-collapse: separate;
+border-spacing: 0;
 width: 100%;
 background: white;
 table-layout: fixed;
@@ -229,6 +231,10 @@ letter-spacing: 0.5px;
 color: #424242;
 border-bottom: 2px solid #e0e0e0;
 transition: background 0.2s;
+position: sticky;
+top: 0;
+z-index: 3;
+box-shadow: 0 1px 0 #e0e0e0;
 }
 
 th.sortable{
